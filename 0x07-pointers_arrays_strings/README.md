@@ -1,2 +1,1 @@
-#!/bin/bash
-Double pointers
+Double Pointer
