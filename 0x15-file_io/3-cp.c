@@ -1,67 +1,65 @@
 #include "main.h"
 void cant_write(char *s);
 void cant_read(char *s);
-
 /**
 * main - entry point!
-* @argc: args count
-* @argv: args values array
+* @s: string to read/writey
+*
 * Description: cp file_from file_to
 * Return: Always 0
 */
 int main(int argc, char *argv[])
 {
-char *buff[1024];
-int fd1, fd2;
-ssize_t rd, wr;
+	char *buff[1024];
+	int fd1, fd2;
+	ssize_t rd, wr;
 
-if (argc != 3)
-{
-dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
-exit(97);
-}
-if (argv[1] == NULL)
-{
-cant_read(argv[1]);
-exit(98);
-}
-fd1 = open(argv[1], O_RDONLY);
-if (fd1 == -1)
-cant_read(argv[1]);
+	if (argc != 3)
+	{
+		dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
+		exit(97);
+	}
+	if (argv[1] == NULL)
+	{
+		cant_read(argv[1]);
+		exit(98);
+	}
+	fd1 = open(argv[1], O_RDONLY);
+	if (fd1 == -1)
+		cant_read(argv[1]);
 
-fd2 = open(argv[1], O_WRONLY | O_CREAT | O_TRUNC, 0664);
-if (fd2 == -1)
-cant_write(argv[2]);
+	fd2 = open(argv[1], O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	if (fd2 == -1)
+		cant_write(argv[2]);
 
-rd = read(fd1, buff, 1024);
-if (rd == -1)
-cant_read(argv[1]);
+	rd = read(fd1, buff, 1024);
+	if (rd == -1)
+		cant_read(argv[1]);
 
-wr = write(fd2, buff, rd);
-if (wr == -1)
-cant_write(argv[2]);
-while (rd == 1024)
-{
-rd = read(fd1, buff, 1024);
-if (rd == -1)
-cant_read(argv[1]);
-wr = write(fd2, buff, rd);
-if (wr == 1)
-cant_write(argv[2]);
+	wr = write(fd2, buff, rd);
+	if (wr == -1)
+		cant_write(argv[2]);
+	while (rd == 1024)
+	{
+		rd = read(fd1, buff, 1024);
+		if (rd == -1)
+			cant_read(argv[1]);
+		wr = write(fd2, buff, rd);
+		if (wr == 1)
+			cant_write(argv[2]);
+	}
+	if (close(fd1) < 0)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd1);
+		exit(100);
+	}
+	if (close(fd2) < 0)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd2);
+		exit(100);
+	}
+	return (0);
 }
-if (close(fd1) < 0)
-{
-dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd1);
-exit(100);
-}
-if (close(fd2) < 0)
-{
-dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd2);
-exit(100);
-}
-return (0);
-}
-
 /**
 * cant_read - function
 * @s: string to read
@@ -71,10 +69,9 @@ return (0);
 */
 void cant_read(char *s)
 {
-dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", s);
-exit(98);
+	dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", s);
+	exit(98);
 }
-
 /**
 * cant_write - function
 * @s: string to write
@@ -84,6 +81,7 @@ exit(98);
 */
 void cant_write(char *s)
 {
-dprintf(STDERR_FILENO, "Error: Can't write to %s\n", s);
-exit(99);
+	dprintf(STDERR_FILENO, "Error: Can't write to %s\n", s);
+	exit(99);
 }
+
