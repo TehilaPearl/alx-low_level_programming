@@ -1,7 +1,7 @@
-#task 1 for makefile
+# make Holberton executable with variables CC, SRC
 
-CC=gcc #compiler to be used
-SRC=main.c holberton.c #files to be compiled
+CC = gcc
+SRC = main.c school.c
 
-all:
-	$(CC) $(SRC) -o holberton
+all: $(SRC)
+	$(CC) $(SRC) -o school
